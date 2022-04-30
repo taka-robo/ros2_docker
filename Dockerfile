@@ -1,5 +1,5 @@
 # docker build -t ros2:galactic .
-# docker run --rm -it --net host -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix ros2:galactic
+# docker run --rm -it --privileged -u ros --net=host -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix ros2:galactic
 ##############################################
 # Created from template ros2.dockerfile.jinja
 ##############################################
@@ -63,6 +63,7 @@ RUN apt-get update && apt-get install -y \
 	gdb \
 	git \
 	pylint3 \
+	byobu\
 	x11-apps\
 	python3-argcomplete \
 	python3-colcon-common-extensions \
@@ -95,7 +96,9 @@ RUN groupadd --gid $USER_GID $USERNAME \
 	# Cleanup
 	&& rm -rf /var/lib/apt/lists/* \
 	&& echo "source /usr/share/bash-completion/completions/git" >> /home/$USERNAME/.bashrc \
-	&& echo "if [ -f /opt/ros/${ROS_DISTRO}/setup.bash ]; then source /opt/ros/${ROS_DISTRO}/setup.bash; fi" >> /home/$USERNAME/.bashrc
+	&& echo "if [ -f /opt/ros/${ROS_DISTRO}/setup.bash ]; then source /opt/ros/${ROS_DISTRO}/setup.bash; fi" >> /home/$USERNAME/.bashrc \
+	&& echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> /home/$USERNAME/.bashrc
+
 ENV DEBIAN_FRONTEND=
 
 ###########################################
